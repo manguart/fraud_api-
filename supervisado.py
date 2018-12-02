@@ -1,3 +1,8 @@
+"""
+Train xgboost that predict a credit card fraud, use data from
+
+https://www.kaggle.com/mlg-ulb/creditcardfraud
+"""
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
@@ -11,28 +16,32 @@ import numpy as np
 import multiprocessing
 import yaml
 
+with open("model_parameters.config",
+          "r") as f:
+    model_parameters = yaml.load(f)
 
-target = "Class"
-nbin = 10
-dev_size = 0.5
-random_seed = 1
-data = pd.read_csv("creditcard.csv")
-del data['Time']
+target = model_parameters["TARGET"]
+nbin = model_parameters["NBIN"]
+dev_size = model_parameters['DEV_SIZE']
+random_seed = model_parameters['RANDOM_SEED']
 
 # Train model
-n_estimators = 10000
-max_depth = 4
-learning_rate = 0.1
-seed = 1
-tree_method = "hist"
-subsample = 0.75
-eval_metric = "logloss"
-early_stopping = 100
-ntile_calibration = 1000
-ntile_exploratory = 5
-test_size = 0.4
-reg_alpha = 0
+n_estimators = model_parameters['N_ESTIMATORS']
+max_depth = model_parameters["MAX_DEPTH"]
+learning_rate = model_parameters['LEARNING_RATE']
+seed = model_parameters["SEED"]
+tree_method = model_parameters["TREE_METHOD"]
+subsample = model_parameters["SUBSAMPLE"]
+eval_metric = model_parameters["EVAL_METRIC"]
+early_stopping = model_parameters["EARLY_STOPPING"]
+ntile_calibration = model_parameters["NTILE_CALIBRATION"]
+ntile_exploratory = model_parameters['NTILE_EXPLORATORY']
+test_size = model_parameters["TEST_SIZE"]
+reg_alpha = model_parameters["REG_ALPHA"]
 
+
+data = pd.read_csv("creditcard.csv")
+del data['Time']
 x = data.copy()
 
 
